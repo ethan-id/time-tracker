@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { EntryInput } from '@/types';
+import { TimeInput } from './TimeInput';
 
 type EntryFormProps = {
     onSubmit: (entry: EntryInput) => void;
@@ -40,24 +41,16 @@ export function EntryForm({ onSubmit, onClear }: EntryFormProps) {
                             placeholder='Activity type'
                         />
                     </label>
-                    <label className='flex flex-col gap-1.5'>
-                        <span className='text-sm font-medium text-neutral-700'>Start Time</span>
-                        <input 
-                            type='time' 
-                            className='border border-neutral-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent' 
-                            value={start} 
-                            onChange={(e) => setStart(e.target.value)} 
-                        />
-                    </label>
-                    <label className='flex flex-col gap-1.5'>
-                        <span className='text-sm font-medium text-neutral-700'>End Time</span>
-                        <input 
-                            type='time' 
-                            className='border border-neutral-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent' 
-                            value={end} 
-                            onChange={(e) => setEnd(e.target.value)} 
-                        />
-                    </label>
+                    <TimeInput
+                        label='Start Time'
+                        value={start}
+                        onChange={setStart}
+                    />
+                    <TimeInput
+                        label='End Time'
+                        value={end}
+                        onChange={setEnd}
+                    />
                 </div>
                 <div className='flex gap-3 pt-2'>
                     <button 
