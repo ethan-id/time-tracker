@@ -56,7 +56,7 @@ export default function Home() {
                 )}
 
                 {/* Add Entry Form */}
-                <EntryForm onSubmit={handleAddEntry} onClear={handleClear} />
+                <EntryForm onSubmit={handleAddEntry} />
 
                 {/* Entries Table */}
                 <EntriesTable entries={state.entries} formatLocalHM={formatLocalHM} />

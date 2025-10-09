@@ -4,10 +4,9 @@ import { TimeInput } from './TimeInput';
 
 type EntryFormProps = {
     onSubmit: (entry: EntryInput) => void;
-    onClear: () => void;
 };
 
-export function EntryForm({ onSubmit, onClear }: EntryFormProps) {
+export function EntryForm({ onSubmit }: EntryFormProps) {
     const [engagement, setEngagement] = useState('');
     const [category, setCategory] = useState('');
     const [start, setStart] = useState('');
@@ -16,6 +15,17 @@ export function EntryForm({ onSubmit, onClear }: EntryFormProps) {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         onSubmit({ engagement, category, start, end });
+        
+        // Move end time to start time for next entry
+        setStart(end);
+        setEnd('');
+    }
+
+    function handleClearForm() {
+        setEngagement('');
+        setCategory('');
+        setStart('');
+        setEnd('');
     }
 
     return (
@@ -62,9 +72,9 @@ export function EntryForm({ onSubmit, onClear }: EntryFormProps) {
                     <button 
                         type='button' 
                         className='bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-medium px-5 py-2.5 rounded-lg text-sm transition-colors' 
-                        onClick={onClear}
+                        onClick={handleClearForm}
                     >
-                        Clear All
+                        Clear Form
                     </button>
                 </div>
             </form>

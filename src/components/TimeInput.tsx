@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 type TimeInputProps = {
     label: string;
@@ -10,16 +10,25 @@ export function TimeInput({ label, value, onChange }: TimeInputProps) {
     const [hours, setHours] = useState('');
     const [minutes, setMinutes] = useState('');
     const [period, setPeriod] = useState<'AM' | 'PM'>('AM');
+    const isUserTypingRef = useRef(false);
 
     // Parse incoming 24-hour time into 12-hour format
     useEffect(() => {
-        if (value) {
-            const [h, m] = value.split(':').map(Number);
-            if (!isNaN(h) && !isNaN(m)) {
-                const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
-                setHours(String(hour12));
-                setMinutes(String(m).padStart(2, '0'));
-                setPeriod(h >= 12 ? 'PM' : 'AM');
+        // Only update if user is not actively typing
+        if (!isUserTypingRef.current) {
+            if (!value) {
+                // Clear the inputs if value is empty
+                setHours('');
+                setMinutes('');
+                setPeriod('AM');
+            } else {
+                const [h, m] = value.split(':').map(Number);
+                if (!isNaN(h) && !isNaN(m)) {
+                    const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+                    setHours(String(hour12));
+                    setMinutes(String(m));
+                    setPeriod(h >= 12 ? 'PM' : 'AM');
+                }
             }
         }
     }, [value]);
@@ -40,6 +49,7 @@ export function TimeInput({ label, value, onChange }: TimeInputProps) {
     };
 
     const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        isUserTypingRef.current = true;
         const val = e.target.value.replace(/\D/g, '');
         if (val === '' || (parseInt(val) >= 1 && parseInt(val) <= 12)) {
             setHours(val);
@@ -47,9 +57,11 @@ export function TimeInput({ label, value, onChange }: TimeInputProps) {
                 updateTime(val, minutes, period);
             }
         }
+        setTimeout(() => { isUserTypingRef.current = false; }, 100);
     };
 
     const handleMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        isUserTypingRef.current = true;
         const val = e.target.value.replace(/\D/g, '');
         if (val === '' || (parseInt(val) >= 0 && parseInt(val) <= 59)) {
             setMinutes(val);
@@ -57,6 +69,7 @@ export function TimeInput({ label, value, onChange }: TimeInputProps) {
                 updateTime(hours, val, period);
             }
         }
+        setTimeout(() => { isUserTypingRef.current = false; }, 100);
     };
 
     const handlePeriodToggle = (newPeriod: 'AM' | 'PM') => {
