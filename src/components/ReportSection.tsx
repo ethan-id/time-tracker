@@ -28,7 +28,7 @@ export function ReportSection({ report, notes, localNotes, onLocalNoteChange, on
                         </p>
                     </div>
                     <div className='text-right'>
-                        <div className='text-xs font-medium text-neutral-500 uppercase tracking-wide'>Total OIT</div>
+                        <div className='text-xs font-medium text-neutral-500 uppercase tracking-wide'>Total Hours</div>
                         <div className='text-4xl font-bold text-blue-600 mt-1'>{report.overall.oit.toFixed(1)}</div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@ export function ReportSection({ report, notes, localNotes, onLocalNoteChange, on
                                 </p>
                             </div>
                             <div className='text-right'>
-                                <div className='text-xs font-medium text-neutral-500 uppercase tracking-wide'>Total OIT</div>
+                                <div className='text-xs font-medium text-neutral-500 uppercase tracking-wide'>Total Hours</div>
                                 <div className='text-3xl font-bold text-blue-600 mt-1'>{eng.totals.oit.toFixed(1)}</div>
                             </div>
                         </div>
@@ -69,7 +69,7 @@ export function ReportSection({ report, notes, localNotes, onLocalNoteChange, on
                                         </div>
                                         <div className='text-right'>
                                             <div className='text-2xl font-bold text-neutral-900'>{cat.totalOIT.toFixed(1)}</div>
-                                            <div className='text-xs text-neutral-500 mt-0.5'>OIT</div>
+                                            <div className='text-xs text-neutral-500 mt-0.5'>Hours</div>
                                         </div>
                                     </div>
                                     
@@ -94,7 +94,7 @@ export function ReportSection({ report, notes, localNotes, onLocalNoteChange, on
                                                         </div>
                                                         <div className='text-right'>
                                                             <div className='text-lg font-bold text-blue-600'>{entry.oit.toFixed(1)}</div>
-                                                            <div className='text-xs text-neutral-500'>OIT</div>
+                                                            <div className='text-xs text-neutral-500'>Hours</div>
                                                         </div>
                                                     </div>
                                                     

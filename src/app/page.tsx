@@ -53,7 +53,7 @@ export default function Home() {
                 {/* Header */}
                 <header className='text-center sm:text-left'>
                     <h1 className='text-3xl sm:text-4xl font-bold text-neutral-900'>Time Tracker</h1>
-                    <p className='text-sm text-neutral-500 mt-1'>Track your time and calculate OIT per engagement</p>
+                    <p className='text-sm text-neutral-500 mt-1'>Track your time and calculate hours per engagement</p>
                 </header>
 
                 {/* Error Alert */}
