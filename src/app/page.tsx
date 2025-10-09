@@ -1,28 +1,34 @@
 "use client";
 
-import { useMemo, useReducer, useState } from 'react';
+import { useMemo, useReducer, useState, useEffect } from 'react';
 import { initialState, reducer } from '@/state';
 import { EntryInput, Report } from '@/types';
 import { buildReport } from '@/lib/report';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { EntryForm } from '@/components/EntryForm';
-import { EntriesTable } from '@/components/EntriesTable';
 import { ReportSection } from '@/components/ReportSection';
 import { EmptyState } from '@/components/EmptyState';
+import { SuccessNotification } from '@/components/SuccessNotification';
 
 export default function Home() {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [localNotes, setLocalNotes] = useState<Record<string, string>>({});
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [prevEntryCount, setPrevEntryCount] = useState(0);
 
     const timezone = useMemo(() => Intl.DateTimeFormat().resolvedOptions().timeZone, []);
     const report: Report = useMemo(() => buildReport(state.entries, timezone, state.notes), [state.entries, timezone, state.notes]);
 
+    // Show success notification when entry count increases
+    useEffect(() => {
+        if (state.entries.length > prevEntryCount) {
+            setShowSuccess(true);
+        }
+        setPrevEntryCount(state.entries.length);
+    }, [state.entries.length, prevEntryCount]);
+
     function handleAddEntry(entry: EntryInput) {
         dispatch({ type: 'ADD', payload: entry });
-    }
-
-    function handleClear() {
-        dispatch({ type: 'CLEAR' });
     }
 
     function handleDismissError() {
@@ -35,10 +41,6 @@ export default function Home() {
 
     function handleSaveNote(engagement: string, category: string, note: string) {
         dispatch({ type: 'SET_NOTE', payload: { engagement, category, note } });
-    }
-
-    function formatLocalHM(iso: string): string {
-        return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
     return (
@@ -55,11 +57,16 @@ export default function Home() {
                     <ErrorAlert error={state.error} onDismiss={handleDismissError} />
                 )}
 
+                {/* Success Notification */}
+                {showSuccess && (
+                    <SuccessNotification 
+                        message='Entry added successfully!'
+                        onDismiss={() => setShowSuccess(false)}
+                    />
+                )}
+
                 {/* Add Entry Form */}
                 <EntryForm onSubmit={handleAddEntry} />
-
-                {/* Entries Table */}
-                <EntriesTable entries={state.entries} formatLocalHM={formatLocalHM} />
 
                 {/* Report Section */}
                 <ReportSection 
