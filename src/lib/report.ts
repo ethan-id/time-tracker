@@ -20,8 +20,7 @@ export function buildReport(entries: Entry[], timezone: string, notes: NotesMap)
     const categories = Array.from(byCat.entries()).map(([category, catEntries]) => {
       const totalMinutes = catEntries.reduce((s, x) => s + x.minutes, 0);
       const totalOIT = roundHalfUp1(catEntries.reduce((s, x) => s + x.oit, 0));
-      const note = notes[`${engagement}|||${category}`];
-      return { category, entries: catEntries.length, totalMinutes, totalOIT, note };
+      return { category, entries: catEntries, totalMinutes, totalOIT };
     });
 
     const totalMinutes = engEntries.reduce((s, x) => s + x.minutes, 0);

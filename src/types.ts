@@ -15,14 +15,13 @@ export type Entry = {
   oit: number;      // one-decimal, half-up
 };
 
-export type NotesMap = Record<string, string>; // key = `${engagement}|||${category}`
+export type NotesMap = Record<string, string>; // key = entry id as string
 
 export type CategorySummary = {
   category: string;
-  entries: number;
+  entries: Entry[];
   totalMinutes: number;
   totalOIT: number; // one-decimal at display
-  note?: string;
 };
 
 export type EngagementSummary = {

@@ -39,8 +39,12 @@ export default function Home() {
         setLocalNotes((prev) => ({ ...prev, [key]: value }));
     }
 
-    function handleSaveNote(engagement: string, category: string, note: string) {
-        dispatch({ type: 'SET_NOTE', payload: { engagement, category, note } });
+    function handleSaveNote(entryId: number, note: string) {
+        dispatch({ type: 'SET_NOTE', payload: { entryId, note } });
+    }
+
+    function formatLocalHM(iso: string): string {
+        return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
     return (
@@ -75,6 +79,7 @@ export default function Home() {
                     localNotes={localNotes}
                     onLocalNoteChange={handleLocalNoteChange}
                     onSaveNote={handleSaveNote}
+                    formatLocalHM={formatLocalHM}
                 />
 
                 {/* Empty State */}

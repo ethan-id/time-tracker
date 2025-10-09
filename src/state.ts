@@ -10,13 +10,11 @@ export type State = {
 
 export type Action =
   | { type: "ADD"; payload: EntryInput }
-  | { type: "SET_NOTE"; payload: { engagement: string; category: string; note: string } }
+  | { type: "SET_NOTE"; payload: { entryId: number; note: string } }
   | { type: "CLEAR" }
   | { type: "DISMISS_ERROR" };
 
 export const initialState: State = { entries: [], nextId: 1, notes: {} };
-
-const keyOf = (e: string, c: string) => `${e}|||${c}`;
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -47,15 +45,12 @@ export function reducer(state: State, action: Action): State {
       return { ...state, entries: [...state.entries, entry], nextId: state.nextId + 1 };
     }
     case "SET_NOTE": {
-      const engagement = (action.payload.engagement ?? "").trim();
-      const category = (action.payload.category ?? "").trim();
-      if (!engagement || !category) return { ...state, error: "Engagement and Category are required for notes." };
       const note = (action.payload.note ?? "").trim();
       if (note.length > 1000) return { ...state, error: "Note must be ≤ 1000 characters." };
-      const k = keyOf(engagement, category);
       const notes = { ...state.notes };
-      if (note.length === 0) delete notes[k];
-      else notes[k] = note;
+      const key = String(action.payload.entryId);
+      if (note.length === 0) delete notes[key];
+      else notes[key] = note;
       return { ...state, notes };
     }
     case "CLEAR":
