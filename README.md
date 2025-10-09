@@ -1,36 +1,137 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Time Tracker
+
+A minimal, session-based time tracking application that calculates **OIT** (0.1 per 6 minutes) for time entries grouped by engagement and category.
+
+![Time Tracker](https://img.shields.io/badge/Next.js-15.5-black?style=flat-square&logo=next.js)
+![React](https://img.shields.io/badge/React-19.1-blue?style=flat-square&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-38bdf8?style=flat-square&logo=tailwind-css)
+
+## Features
+
+- ⏱️ **Time Entry Tracking** - Add time entries with engagement, category, start time, and end time
+- 📊 **OIT Calculation** - Automatically calculates OIT (0.1 per 6 minutes) with half-up rounding
+- 📈 **Hierarchical Reports** - View time breakdowns by engagement → category
+- 📝 **Category Notes** - Add collapsible notes to any engagement/category combination
+- 🎨 **Modern UI** - Clean, mobile-first design with Tailwind CSS
+- 🚫 **No Persistence** - Session-only data (refresh clears everything)
+- 🌐 **Client-Side Only** - Pure browser-based application with no backend
+
+## Tech Stack
+
+- **Framework:** Next.js 15.5 (App Router)
+- **Runtime:** React 19.1
+- **Language:** TypeScript 5.x
+- **Styling:** Tailwind CSS 4.x
+- **State Management:** React useReducer
+- **Package Manager:** Bun
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx           # Main page component (orchestrator)
+│   ├── layout.tsx         # Root layout
+│   └── globals.css        # Global styles
+├── components/
+│   ├── ErrorAlert.tsx     # Error message display
+│   ├── EntryForm.tsx      # Time entry form
+│   ├── EntriesTable.tsx   # Entries list table
+│   ├── ReportSection.tsx  # Report with breakdowns
+│   └── EmptyState.tsx     # Empty state UI
+├── lib/
+│   ├── time.ts            # Time parsing, OIT calculation, formatting
+│   └── report.ts          # Report generation logic
+├── state.ts               # State management (reducer & actions)
+└── types.ts               # TypeScript type definitions
+```
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ or Bun
+- Modern web browser
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the repository
+git clone <repository-url>
+cd time-tracker
+
+# Install dependencies
+bun install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Run development server
+bun dev
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Build for production
+bun run build
 
-## Learn More
+# Start production server
+bun start
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Adding Entries
 
-## Deploy on Vercel
+1. Enter an **Engagement** (project name)
+2. Enter a **Category** (activity type)
+3. Select **Start Time** and **End Time**
+4. Click **Add Entry**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Viewing Reports
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Entries are automatically grouped by engagement, then by category
+- **OIT values** are prominently displayed for easy scanning
+- View detailed breakdowns including entries count, minutes, and formatted time
+
+### Managing Notes
+
+- Click **Add Note** or **Edit Note** under any category
+- Notes are saved automatically on blur
+- Maximum 1000 characters per note
+
+### Clearing Data
+
+- Click **Clear All** to remove all entries and notes
+- ⚠️ **Warning:** There's no undo - all data is lost on refresh
+
+## OIT Calculation
+
+**OIT** (Output Impact Time) is calculated as:
+- **Formula:** `OIT = round_half_up(minutes / 60, 1)`
+- **Example:** 6 minutes = 0.1 OIT, 60 minutes = 1.0 OIT
+- **Rounding:** Half-up to one decimal place
+
+## Key Design Decisions
+
+- ✅ **Session-only storage** - No database, localStorage, or persistence
+- ✅ **Client-side rendering** - All logic runs in the browser
+- ✅ **Time-only inputs** - Uses HH:MM format (supports cross-midnight entries)
+- ✅ **Light mode only** - Optimized for clarity and readability
+- ✅ **Mobile-first** - Responsive design prioritizing mobile experience
+- ✅ **Component architecture** - Modular, reusable components
+
+## Browser Compatibility
+
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
+
+## Contributing
+
+This is a personal project. See `spec.md` for the full specification.
+
+## License
+
+MIT
