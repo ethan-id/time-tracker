@@ -1,6 +1,6 @@
 # Time Tracker
 
-A minimal, session-based time tracking application that calculates **OIT** (0.1 per 6 minutes) for time entries grouped by engagement and category.
+A minimal, session-based time tracking application that calculates hours for time entries grouped by engagement and category.
 
 ![Time Tracker](https://img.shields.io/badge/Next.js-15.5-black?style=flat-square&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.1-blue?style=flat-square&logo=react)
@@ -10,8 +10,8 @@ A minimal, session-based time tracking application that calculates **OIT** (0.1 
 ## Features
 
 - ⏱️ **Time Entry Tracking** - Add time entries with engagement, category, start time, and end time
-- 📊 **OIT Calculation** - Automatically calculates OIT (0.1 per 6 minutes) with half-up rounding
-- 📈 **Hierarchical Reports** - View time breakdowns by engagement → category
+- � **Hours Calculation** - Automatically calculates hours with half-up rounding
+- �📈 **Hierarchical Reports** - View time breakdowns by engagement → category
 - 📝 **Category Notes** - Add collapsible notes to any engagement/category combination
 - 🎨 **Modern UI** - Clean, mobile-first design with Tailwind CSS
 - 🚫 **No Persistence** - Session-only data (refresh clears everything)
@@ -41,7 +41,7 @@ src/
 │   ├── ReportSection.tsx  # Report with breakdowns
 │   └── EmptyState.tsx     # Empty state UI
 ├── lib/
-│   ├── time.ts            # Time parsing, OIT calculation, formatting
+│   ├── time.ts            # Time parsing, hours calculation, formatting
 │   └── report.ts          # Report generation logic
 ├── state.ts               # State management (reducer & actions)
 └── types.ts               # TypeScript type definitions
@@ -92,7 +92,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ### Viewing Reports
 
 - Entries are automatically grouped by engagement, then by category
-- **OIT values** are prominently displayed for easy scanning
+- Hours are prominently displayed for easy scanning
 - View detailed breakdowns including entries count, minutes, and formatted time
 
 ### Managing Notes
@@ -105,13 +105,6 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 - Click **Clear All** to remove all entries and notes
 - ⚠️ **Warning:** There's no undo - all data is lost on refresh
-
-## OIT Calculation
-
-**OIT** (Output Impact Time) is calculated as:
-- **Formula:** `OIT = round_half_up(minutes / 60, 1)`
-- **Example:** 6 minutes = 0.1 OIT, 60 minutes = 1.0 OIT
-- **Rounding:** Half-up to one decimal place
 
 ## Key Design Decisions
 
