@@ -51,4 +51,12 @@ export function rollEndIfBefore(start: Date, end: Date): Date {
   return end;
 }
 
+// Convert ISO string to HH:mm format (24-hour)
+export function isoToHHMM(iso: string): string {
+  const d = new Date(iso);
+  const hh = d.getHours();
+  const mm = d.getMinutes();
+  return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
+}
+
 

@@ -31,6 +31,10 @@ export default function Home() {
         dispatch({ type: 'ADD', payload: entry });
     }
 
+    function handleEditEntry(entryId: number, entry: EntryInput) {
+        dispatch({ type: 'EDIT', payload: { entryId, entry } });
+    }
+
     function handleDismissError() {
         dispatch({ type: 'DISMISS_ERROR' });
     }
@@ -49,7 +53,7 @@ export default function Home() {
 
     return (
         <div className='min-h-screen bg-neutral-50'>
-            <div className='mx-auto max-w-4xl px-4 py-6 sm:py-8 space-y-6'>
+            <div className='mx-auto max-w-4xl px-4 py-6 sm:py-8 pb-20 space-y-6'>
                 {/* Header */}
                 <header className='text-center sm:text-left'>
                     <h1 className='text-3xl sm:text-4xl font-bold text-neutral-900'>Time Tracker</h1>
@@ -79,6 +83,7 @@ export default function Home() {
                     localNotes={localNotes}
                     onLocalNoteChange={handleLocalNoteChange}
                     onSaveNote={handleSaveNote}
+                    onEditEntry={handleEditEntry}
                     formatLocalHM={formatLocalHM}
                 />
 

@@ -10,6 +10,7 @@ export type State = {
 
 export type Action =
   | { type: "ADD"; payload: EntryInput }
+  | { type: "EDIT"; payload: { entryId: number; entry: EntryInput } }
   | { type: "SET_NOTE"; payload: { entryId: number; note: string } }
   | { type: "CLEAR" }
   | { type: "DISMISS_ERROR" };
@@ -43,6 +44,35 @@ export function reducer(state: State, action: Action): State {
         oit: calcOIT(minutes),
       };
       return { ...state, entries: [...state.entries, entry], nextId: state.nextId + 1 };
+    }
+    case "EDIT": {
+      const { entryId, entry: input } = action.payload;
+      const { engagement: rawEng, category: rawCat, start, end } = input;
+      const engagement = (rawEng ?? "").trim();
+      const category = (rawCat ?? "").trim();
+      if (!engagement || !category || engagement.length > 100 || category.length > 100) {
+        return { ...state, error: "Engagement and Category must be 1–100 characters." };
+      }
+      // Support either full datetime-local (legacy) or time-only HH:mm
+      const startD = start.includes(":") && start.length <= 5 ? parseLocalTimeHM(start) : parseLocalDateTime(start);
+      const rawEnd = end.includes(":") && end.length <= 5 ? parseLocalTimeHM(end) : parseLocalDateTime(end);
+      const endD = startD && rawEnd ? rollEndIfBefore(startD, rawEnd) : rawEnd;
+      if (!startD || !endD) return { ...state, error: "Invalid start/end date-times." };
+      const minutes = diffMinutesFloor(startD, endD);
+      if (minutes <= 0) return { ...state, error: "End time must be after start time." };
+
+      const updatedEntry: Entry = {
+        id: entryId,
+        engagement,
+        category,
+        startISO: toISO(startD),
+        endISO: toISO(endD),
+        minutes,
+        oit: calcOIT(minutes),
+      };
+      
+      const entries = state.entries.map(e => e.id === entryId ? updatedEntry : e);
+      return { ...state, entries };
     }
     case "SET_NOTE": {
       const note = (action.payload.note ?? "").trim();
