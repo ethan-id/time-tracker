@@ -35,6 +35,10 @@ export default function Home() {
         dispatch({ type: 'EDIT', payload: { entryId, entry } });
     }
 
+    function handleDeleteEntry(entryId: number) {
+        dispatch({ type: 'DELETE', payload: { entryId } });
+    }
+
     function handleDismissError() {
         dispatch({ type: 'DISMISS_ERROR' });
     }
@@ -84,6 +88,7 @@ export default function Home() {
                     onLocalNoteChange={handleLocalNoteChange}
                     onSaveNote={handleSaveNote}
                     onEditEntry={handleEditEntry}
+                    onDeleteEntry={handleDeleteEntry}
                     formatLocalHM={formatLocalHM}
                 />
 

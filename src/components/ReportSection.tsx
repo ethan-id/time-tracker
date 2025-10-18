@@ -10,10 +10,11 @@ type ReportSectionProps = {
     onLocalNoteChange: (key: string, value: string) => void;
     onSaveNote: (entryId: number, note: string) => void;
     onEditEntry: (entryId: number, entry: EntryInput) => void;
+    onDeleteEntry: (entryId: number) => void;
     formatLocalHM: (iso: string) => string;
 };
 
-export function ReportSection({ report, notes, localNotes, onLocalNoteChange, onSaveNote, onEditEntry, formatLocalHM }: ReportSectionProps) {
+export function ReportSection({ report, notes, localNotes, onLocalNoteChange, onSaveNote, onEditEntry, onDeleteEntry, formatLocalHM }: ReportSectionProps) {
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editForm, setEditForm] = useState<EntryInput>({ engagement: '', category: '', start: '', end: '' });
 
@@ -183,6 +184,16 @@ export function ReportSection({ report, notes, localNotes, onLocalNoteChange, on
                                                                 <div className='text-right'>
                                                                     <div className='text-lg font-bold text-blue-600'>{entry.oit.toFixed(1)}</div>
                                                                     <div className='text-xs text-neutral-500'>Hours</div>
+                                                                    <button
+                                                                        type='button'
+                                                                        className='mt-1 text-neutral-400 hover:text-red-600 transition-colors'
+                                                                        onClick={() => onDeleteEntry(entry.id)}
+                                                                        title='Delete entry'
+                                                                    >
+                                                                        <svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                                                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' />
+                                                                        </svg>
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                             

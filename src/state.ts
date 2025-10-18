@@ -11,6 +11,7 @@ export type State = {
 export type Action =
   | { type: "ADD"; payload: EntryInput }
   | { type: "EDIT"; payload: { entryId: number; entry: EntryInput } }
+  | { type: "DELETE"; payload: { entryId: number } }
   | { type: "SET_NOTE"; payload: { entryId: number; note: string } }
   | { type: "CLEAR" }
   | { type: "DISMISS_ERROR" };
@@ -73,6 +74,14 @@ export function reducer(state: State, action: Action): State {
       
       const entries = state.entries.map(e => e.id === entryId ? updatedEntry : e);
       return { ...state, entries };
+    }
+    case "DELETE": {
+      const { entryId } = action.payload;
+      const entries = state.entries.filter(e => e.id !== entryId);
+      // Also remove the note for this entry
+      const notes = { ...state.notes };
+      delete notes[String(entryId)];
+      return { ...state, entries, notes };
     }
     case "SET_NOTE": {
       const note = (action.payload.note ?? "").trim();
