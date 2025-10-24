@@ -11,9 +11,17 @@ export function EntryForm({ onSubmit }: EntryFormProps) {
     const [category, setCategory] = useState('');
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
+    const isPmToAm = (() => {
+        if (!start || !end) return false;
+        const startHour = parseInt(start.split(':')[0], 10);
+        const endHour = parseInt(end.split(':')[0], 10);
+        if (isNaN(startHour) || isNaN(endHour)) return false;
+        return startHour >= 12 && endHour < 12;
+    })();
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (isPmToAm) return;
         onSubmit({ engagement, category, start, end });
         
         // Move end time to start time for next entry
@@ -65,7 +73,8 @@ export function EntryForm({ onSubmit }: EntryFormProps) {
                 <div className='flex gap-3 pt-2'>
                     <button 
                         type='submit' 
-                        className='bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-lg text-sm transition-colors'
+                        disabled={isPmToAm}
+                        className='bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
                     >
                         Add Entry
                     </button>
