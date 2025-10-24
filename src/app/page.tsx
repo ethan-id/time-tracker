@@ -57,7 +57,7 @@ export default function Home() {
 
     return (
         <div className='min-h-screen bg-neutral-50'>
-            <div className='mx-auto max-w-4xl px-4 py-6 sm:py-8 pb-20 space-y-6'>
+            <div className='mx-auto px-4 py-6 sm:py-8 pb-20 space-y-6'>
                 {/* Header */}
                 <header className='text-center sm:text-left'>
                     <h1 className='text-3xl sm:text-4xl font-bold text-neutral-900'>Time Tracker</h1>
@@ -77,23 +77,28 @@ export default function Home() {
                     />
                 )}
 
-                {/* Add Entry Form */}
-                <EntryForm onSubmit={handleAddEntry} />
+                <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+                    <div className='lg:col-span-1'>
+                        {/* Add Entry Form */}
+                        <EntryForm onSubmit={handleAddEntry} />
+                    </div>
+                    <div className='lg:col-span-2'>
+                        {/* Report Section */}
+                        <ReportSection 
+                            report={report}
+                            notes={state.notes}
+                            localNotes={localNotes}
+                            onLocalNoteChange={handleLocalNoteChange}
+                            onSaveNote={handleSaveNote}
+                            onEditEntry={handleEditEntry}
+                            onDeleteEntry={handleDeleteEntry}
+                            formatLocalHM={formatLocalHM}
+                        />
 
-                {/* Report Section */}
-                <ReportSection 
-                    report={report}
-                    notes={state.notes}
-                    localNotes={localNotes}
-                    onLocalNoteChange={handleLocalNoteChange}
-                    onSaveNote={handleSaveNote}
-                    onEditEntry={handleEditEntry}
-                    onDeleteEntry={handleDeleteEntry}
-                    formatLocalHM={formatLocalHM}
-                />
-
-                {/* Empty State */}
-                {state.entries.length === 0 && <EmptyState />}
+                        {/* Empty State */}
+                        {state.entries.length === 0 && <EmptyState />}
+                    </div>
+                </div>
             </div>
         </div>
     );

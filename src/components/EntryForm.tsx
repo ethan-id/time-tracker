@@ -32,7 +32,7 @@ export function EntryForm({ onSubmit }: EntryFormProps) {
         <section className='bg-white rounded-xl shadow-sm p-5 sm:p-6'>
             <h2 className='text-lg font-semibold text-neutral-900 mb-4'>Add Entry</h2>
             <form onSubmit={handleSubmit} className='space-y-4'>
-                <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                <div className='grid grid-cols-1 gap-4'>
                     <label className='flex flex-col gap-1.5'>
                         <span className='text-sm font-medium text-neutral-700'>Engagement</span>
                         <input 
