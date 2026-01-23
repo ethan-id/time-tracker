@@ -57,19 +57,16 @@ export default function Home() {
 
     return (
         <div className='min-h-screen bg-neutral-50'>
-            <div className='mx-auto px-4 py-4 sm:py-6 pb-10 space-y-4'>
-                {/* Header */}
+            <div className='mx-auto px-4 py-6 sm:py-8 pb-20 space-y-6'>
                 <header className='text-center sm:text-left'>
                     <h1 className='text-3xl sm:text-4xl font-bold text-neutral-900'>Time Tracker</h1>
                     <p className='text-sm text-neutral-500 mt-1'>Track your time and calculate hours per engagement</p>
                 </header>
 
-                {/* Error Alert */}
                 {state.error && (
                     <ErrorAlert error={state.error} onDismiss={handleDismissError} />
                 )}
 
-                {/* Success Notification */}
                 {showSuccess && (
                     <SuccessNotification 
                         message='Entry added successfully!'
@@ -77,7 +74,7 @@ export default function Home() {
                     />
                 )}
 
-                <div className='grid grid-cols-1 lg:grid-cols-3 gap-4'>
+                <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
                     <div className='lg:col-span-1'>
                         {/* Add Entry Form */}
                         <EntryForm onSubmit={handleAddEntry} />
