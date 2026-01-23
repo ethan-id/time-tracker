@@ -19,8 +19,6 @@ function cleanEngagementValue(value: unknown): string | null {
 export function EntryForm({ onSubmit }: EntryFormProps) {
     const [engagement, setEngagement] = useState('');
     const [engagementHistory, setEngagementHistory] = useState<string[]>([]);
-    const [isEngagementMenuOpen, setIsEngagementMenuOpen] = useState(false);
-    const [activeEngagementIndex, setActiveEngagementIndex] = useState(-1);
     const [category, setCategory] = useState('');
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
@@ -76,40 +74,22 @@ export function EntryForm({ onSubmit }: EntryFormProps) {
         });
     }
 
-    function removeEngagementFromHistory(value: string) {
-        const cleaned = cleanEngagementValue(value);
-        if (!cleaned) return;
-        setEngagementHistory((prev) => {
-            const key = cleaned.toLowerCase();
-            const next = prev.filter((v) => v.toLowerCase() !== key);
-            persistEngagementHistory(next);
-            return next;
-        });
-    }
-
-    const filteredEngagementHistory = useMemo(() => {
-        const q = engagement.trim().toLowerCase();
-        const base = q ? engagementHistory.filter((v) => v.toLowerCase().includes(q)) : engagementHistory;
-        return base.slice(0, 8);
+    const engagementSuggestion = useMemo(() => {
+        const typed = engagement;
+        if (!typed) return null;
+        // Keep it simple + predictable: only suggest when the input is already trimmed.
+        if (typed !== typed.trim()) return null;
+        const q = typed.toLowerCase();
+        if (!q) return null;
+        const found = engagementHistory.find((v) => v.toLowerCase().startsWith(q) && v.length > typed.length);
+        return found ?? null;
     }, [engagement, engagementHistory]);
 
-    useEffect(() => {
-        if (!isEngagementMenuOpen) return;
-        if (filteredEngagementHistory.length === 0) {
-            setActiveEngagementIndex(-1);
-            return;
-        }
-        setActiveEngagementIndex((i) => {
-            if (i < 0) return -1;
-            return Math.min(i, filteredEngagementHistory.length - 1);
-        });
-    }, [filteredEngagementHistory, isEngagementMenuOpen]);
-
-    function selectEngagementSuggestion(value: string) {
-        setEngagement(value);
-        setIsEngagementMenuOpen(false);
-        setActiveEngagementIndex(-1);
-    }
+    const engagementSuggestionRemainder = useMemo(() => {
+        if (!engagementSuggestion) return '';
+        if (engagementSuggestion.length <= engagement.length) return '';
+        return engagementSuggestion.slice(engagement.length);
+    }, [engagement, engagementSuggestion]);
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -137,105 +117,33 @@ export function EntryForm({ onSubmit }: EntryFormProps) {
                     <label className='flex flex-col gap-1.5'>
                         <span className='text-sm font-medium text-neutral-700'>Engagement</span>
                         <div className='relative'>
-                            <input
-                                className='w-full border border-neutral-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-                                value={engagement}
-                                onChange={(e) => {
-                                    setEngagement(e.target.value);
-                                    setIsEngagementMenuOpen(true);
-                                    setActiveEngagementIndex(-1);
-                                }}
-                                onFocus={() => setIsEngagementMenuOpen(true)}
-                                onBlur={() => {
-                                    // Let clicks inside the menu (mousedown) run first
-                                    window.setTimeout(() => setIsEngagementMenuOpen(false), 0);
-                                }}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Escape') {
-                                        setIsEngagementMenuOpen(false);
-                                        setActiveEngagementIndex(-1);
-                                        return;
-                                    }
-
-                                    if (e.key === 'ArrowDown') {
-                                        e.preventDefault();
-                                        setIsEngagementMenuOpen(true);
-                                        setActiveEngagementIndex((i) => {
-                                            const max = filteredEngagementHistory.length - 1;
-                                            if (max < 0) return -1;
-                                            return Math.min(i + 1, max);
-                                        });
-                                        return;
-                                    }
-
-                                    if (e.key === 'ArrowUp') {
-                                        e.preventDefault();
-                                        setIsEngagementMenuOpen(true);
-                                        setActiveEngagementIndex((i) => Math.max(i - 1, -1));
-                                        return;
-                                    }
-
-                                    if (e.key === 'Enter' && isEngagementMenuOpen && activeEngagementIndex >= 0) {
-                                        const v = filteredEngagementHistory[activeEngagementIndex];
-                                        if (v) {
-                                            e.preventDefault(); // don't submit the form when selecting a suggestion
-                                            selectEngagementSuggestion(v);
+                            <div className='relative w-full rounded-lg border border-neutral-300 bg-white focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent'>
+                                {engagementSuggestionRemainder && (
+                                    <div
+                                        className='pointer-events-none absolute inset-0 z-0 px-3 py-2 text-sm whitespace-pre overflow-hidden'
+                                        aria-hidden='true'
+                                    >
+                                        <span className='text-transparent'>{engagement}</span>
+                                        <span className='text-neutral-400'>{engagementSuggestionRemainder}</span>
+                                    </div>
+                                )}
+                                <input
+                                    className='relative z-10 w-full bg-transparent px-3 py-2 text-sm focus:outline-none'
+                                    value={engagement}
+                                    onChange={(e) => setEngagement(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && engagementSuggestion) {
+                                            // Accept the suggestion instead of submitting the form.
+                                            e.preventDefault();
+                                            setEngagement(engagementSuggestion);
+                                            return;
                                         }
-                                    }
-                                }}
-                                placeholder='Project name'
-                                autoComplete='off'
-                                aria-label='Engagement'
-                                aria-expanded={isEngagementMenuOpen && filteredEngagementHistory.length > 0}
-                                aria-controls='engagement-suggestions'
-                                aria-activedescendant={
-                                    activeEngagementIndex >= 0 ? `engagement-suggestion-${activeEngagementIndex}` : undefined
-                                }
-                            />
-
-                            {isEngagementMenuOpen && filteredEngagementHistory.length > 0 && (
-                                <ul
-                                    id='engagement-suggestions'
-                                    role='listbox'
-                                    className='absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-lg'
-                                >
-                                    {filteredEngagementHistory.map((v, idx) => {
-                                        const isActive = idx === activeEngagementIndex;
-                                        return (
-                                            <li
-                                                key={v}
-                                                id={`engagement-suggestion-${idx}`}
-                                                role='option'
-                                                aria-selected={isActive}
-                                                className={`flex items-center justify-between gap-2 px-2 py-1.5 text-sm ${
-                                                    isActive ? 'bg-blue-50' : 'bg-white'
-                                                }`}
-                                                onMouseEnter={() => setActiveEngagementIndex(idx)}
-                                            >
-                                                <button
-                                                    type='button'
-                                                    className='flex-1 text-left text-neutral-800 truncate px-1 py-1 hover:text-neutral-900'
-                                                    onMouseDown={(e) => e.preventDefault()}
-                                                    onClick={() => selectEngagementSuggestion(v)}
-                                                    title={v}
-                                                >
-                                                    {v}
-                                                </button>
-                                                <button
-                                                    type='button'
-                                                    className='shrink-0 rounded-md px-2 py-1 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800'
-                                                    onMouseDown={(e) => e.preventDefault()}
-                                                    onClick={() => removeEngagementFromHistory(v)}
-                                                    aria-label={`Remove ${v} from saved engagements`}
-                                                    title='Remove'
-                                                >
-                                                    ×
-                                                </button>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            )}
+                                    }}
+                                    placeholder='Project name'
+                                    autoComplete='off'
+                                    aria-label='Engagement'
+                                />
+                            </div>
                         </div>
                     </label>
                     <label className='flex flex-col gap-1.5'>

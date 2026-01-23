@@ -61,7 +61,7 @@ export function ReportSection({ report, notes, localNotes, onLocalNoteChange, on
             
             <div className='space-y-4'>
                 {report.engagements.map((eng) => (
-                    <div key={eng.engagement}>
+                    <div key={eng.engagementKey}>
                         <details className='group' open>
                             <summary className='list-none cursor-pointer select-none flex items-start justify-between gap-4 rounded-lg hover:bg-neutral-50 px-2 py-1 -mx-2'>
                                 <div>
@@ -84,7 +84,7 @@ export function ReportSection({ report, notes, localNotes, onLocalNoteChange, on
                             {/* Categories */}
                             <div className='space-y-3 mt-2'>
                                 {eng.categories.map((cat) => (
-                                    <div key={cat.category} className='bg-neutral-50 rounded-lg p-3'>
+                                    <div key={cat.categoryKey} className='bg-neutral-50 rounded-lg p-3'>
                                         {/* Category Header */}
                                         <div className='flex items-start justify-between gap-4 mb-2'>
                                             <div className='flex-1'>

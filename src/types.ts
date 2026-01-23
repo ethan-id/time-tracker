@@ -18,6 +18,7 @@ export type Entry = {
 export type NotesMap = Record<string, string>; // key = entry id as string
 
 export type CategorySummary = {
+  categoryKey: string; // canonical (case-insensitive) key used for grouping
   category: string;
   entries: Entry[];
   totalMinutes: number;
@@ -25,6 +26,7 @@ export type CategorySummary = {
 };
 
 export type EngagementSummary = {
+  engagementKey: string; // canonical (case-insensitive) key used for grouping
   engagement: string;
   categories: CategorySummary[];
   totals: {
