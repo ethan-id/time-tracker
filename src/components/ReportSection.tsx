@@ -61,48 +61,65 @@ export function ReportSection({ report, notes, localNotes, onLocalNoteChange, on
             
             <div className='space-y-4'>
                 {report.engagements.map((eng) => (
-                    <div key={eng.engagementKey}>
+                    <div key={eng.engagementKey} className='rounded-xl border border-neutral-200 overflow-hidden bg-white shadow-sm'>
                         <details className='group' open>
-                            <summary className='list-none cursor-pointer select-none flex items-start justify-between gap-4 rounded-lg hover:bg-neutral-50 px-2 py-1 -mx-2'>
-                                <div>
-                                    <h3 className='text-base font-semibold text-neutral-900 leading-snug flex items-center gap-2'>
-                                        <svg className='w-4 h-4 text-neutral-400 transition-transform group-open:rotate-90' fill='currentColor' viewBox='0 0 20 20'>
-                                            <path fillRule='evenodd' d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z' clipRule='evenodd' />
-                                        </svg>
-                                        {eng.engagement}
-                                    </h3>
-                                    <p className='text-xs text-neutral-500 mt-0.5'>
-                                        {eng.totals.entries} {eng.totals.entries === 1 ? 'entry' : 'entries'} · {formatHM(eng.totals.minutes)}
-                                    </p>
-                                </div>
-                                <div className='text-right'>
-                                    <div className='text-xs font-medium text-neutral-500 uppercase tracking-wide'>Total Hours</div>
-                                    <div className='text-2xl font-bold text-blue-600 leading-none mt-1'>{eng.totals.oit.toFixed(1)}</div>
+                            <summary className='list-none cursor-pointer select-none'>
+                                <div className='flex items-start justify-between gap-4 px-3 sm:px-4 py-3 bg-white hover:bg-neutral-50 transition-colors border-b border-neutral-200'>
+                                    <div className='min-w-0'>
+                                        <div className='flex items-start gap-2'>
+                                            <div className='w-1 self-stretch rounded-full bg-blue-600/70 group-open:bg-blue-600 flex-none' />
+                                            <svg className='mt-1 w-4 h-4 text-blue-500/70 transition-transform group-open:rotate-90 flex-none' fill='currentColor' viewBox='0 0 20 20'>
+                                                <path fillRule='evenodd' d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z' clipRule='evenodd' />
+                                            </svg>
+                                            <div className='min-w-0'>
+                                                <h3 className='text-lg sm:text-xl font-semibold text-neutral-900 leading-snug truncate'>
+                                                    {eng.engagement}
+                                                </h3>
+                                                <div className='mt-1 flex flex-wrap items-center gap-1.5'>
+                                                    <span className='inline-flex items-center rounded-full bg-white/70 border border-blue-200 text-blue-800 px-2 py-0.5 text-[11px] font-medium'>
+                                                        {eng.totals.entries} {eng.totals.entries === 1 ? 'entry' : 'entries'}
+                                                    </span>
+                                                    <span className='inline-flex items-center rounded-full bg-white/70 border border-blue-200 text-blue-800 px-2 py-0.5 text-[11px] font-medium'>
+                                                        {formatHM(eng.totals.minutes)}
+                                                    </span>
+                                                    <span className='inline-flex items-center rounded-full bg-white/70 border border-blue-200 text-blue-800 px-2 py-0.5 text-[11px] font-medium'>
+                                                        {eng.totals.minutes} min
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='text-right flex-none'>
+                                        <div className='text-[11px] font-semibold text-blue-900/70 uppercase tracking-wide'>Total Hours</div>
+                                        <div className='text-3xl sm:text-4xl font-extrabold text-blue-700 leading-none mt-1 tabular-nums'>
+                                            {eng.totals.oit.toFixed(1)}
+                                        </div>
+                                    </div>
                                 </div>
                             </summary>
 
                             {/* Categories */}
-                            <div className='space-y-3 mt-2'>
+                            <div className='space-y-2 px-3 sm:px-4 pb-3 sm:pb-4 pp-4 mt-4'>
                                 {eng.categories.map((cat) => (
-                                    <div key={cat.categoryKey} className='bg-neutral-50 rounded-lg p-3'>
+                                    <div key={cat.categoryKey} className='rounded-lg border border-neutral-200 bg-white'>
                                         {/* Category Header */}
-                                        <div className='flex items-start justify-between gap-4 mb-2'>
+                                        <div className='flex items-start justify-between gap-4 px-3 py-2 border-b border-neutral-100'>
                                             <div className='flex-1'>
                                                 <div className='flex flex-wrap items-baseline gap-x-3 gap-y-0.5'>
-                                                    <h4 className='text-sm font-semibold text-neutral-900'>{cat.category}</h4>
-                                                    <div className='text-xs text-neutral-600'>
-                                                        {cat.entries.length} {cat.entries.length === 1 ? 'entry' : 'entries'} · {cat.totalMinutes} min · {formatHM(cat.totalMinutes)}
+                                                    <h4 className='text-xs font-semibold text-neutral-800 uppercase tracking-wide'>{cat.category}</h4>
+                                                    <div className='text-[11px] text-neutral-500'>
+                                                        {cat.entries.length} {cat.entries.length === 1 ? 'entry' : 'entries'} · {formatHM(cat.totalMinutes)}
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className='text-right'>
-                                                <div className='text-lg font-bold text-neutral-900 leading-none'>{cat.totalOIT.toFixed(1)}</div>
-                                                <div className='text-[11px] text-neutral-500 mt-0.5'>Hours</div>
+                                                <div className='text-sm font-semibold text-neutral-700 leading-none tabular-nums'>{cat.totalOIT.toFixed(1)}</div>
+                                                <div className='text-[10px] text-neutral-400 mt-0.5'>hrs</div>
                                             </div>
                                         </div>
                                         
                                         {/* Individual Entries */}
-                                        <div className='space-y-2 mt-2'>
+                                        <div className='space-y-2 p-3'>
                                             {cat.entries.map((entry) => {
                                                 const key = String(entry.id);
                                                 const committed = notes[key] ?? '';
@@ -110,7 +127,7 @@ export function ReportSection({ report, notes, localNotes, onLocalNoteChange, on
                                                 const isEditing = editingId === entry.id;
                                                 
                                                 return (
-                                                    <div key={entry.id} className='bg-white rounded-lg p-2 border border-neutral-200'>
+                                                    <div key={entry.id} className='rounded-lg p-2 border border-neutral-200 bg-neutral-50/30'>
                                                         {isEditing ? (
                                                             // Edit Mode
                                                             <div className='space-y-2'>
@@ -183,8 +200,8 @@ export function ReportSection({ report, notes, localNotes, onLocalNoteChange, on
                                                                         </div>
                                                                     </div>
                                                                     <div className='text-right'>
-                                                                        <div className='text-base font-bold text-blue-600 leading-none'>{entry.oit.toFixed(1)}</div>
-                                                                        <div className='text-[11px] text-neutral-500'>Hours</div>
+                                                                        <div className='text-sm font-semibold text-blue-700 leading-none tabular-nums'>{entry.oit.toFixed(1)}</div>
+                                                                        <div className='text-[10px] text-neutral-400'>hrs</div>
                                                                         <button
                                                                             type='button'
                                                                             className='mt-1 text-neutral-400 hover:text-red-600 transition-colors'
