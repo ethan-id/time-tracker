@@ -20,7 +20,8 @@ export function TimeInput({ label, value, onChange }: TimeInputProps) {
                 // Clear the inputs if value is empty
                 setHours('');
                 setMinutes('');
-                setPeriod('AM');
+                // Keep the user's last-selected period instead of resetting to AM.
+                // This is especially important when the parent clears the field between entries.
             } else {
                 const [h, m] = value.split(':').map(Number);
                 if (!isNaN(h) && !isNaN(m)) {
